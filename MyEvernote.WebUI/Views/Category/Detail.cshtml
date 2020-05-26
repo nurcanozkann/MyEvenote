@@ -1,0 +1,70 @@
+﻿@model MyEvernote.Entities.Category
+@{
+    ViewBag.Title = "Kategori Detay";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h2>@ViewBag.Title</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table">
+            <tr>
+                <th class="col-md-3">
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+
+                <td class="col-md-9">
+                    @Html.DisplayFor(model => model.Title)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Description)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedDate)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.CreatedDate)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdatedDate)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.UpdatedDate)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedUserName)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.CreatedUserName)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-8 col-md-offset-2">
+        <a href="/Category/Edit/@Model.Id" class="btn btn-warning btn-sm" title="Edit">
+            <span class="glyphicon glyphicon-edit"></span> Düzenle
+        </a>
+        <a href="/Category/Index" class="btn btn-default btn-sm" title="Edit">
+            <span class="glyphicon glyphicon-arrow-left"></span> Listeye Dön
+        </a>
+    </div>
+</div>

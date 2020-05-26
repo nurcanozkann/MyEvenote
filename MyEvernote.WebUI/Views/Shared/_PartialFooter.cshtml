@@ -1,0 +1,40 @@
+﻿<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-4 text-center">
+                <h5><strong>Site Haritası</strong></h5>
+                <hr />
+                <p>
+                    <a href="@Url.Action("About","Home")">
+                        <i class="glyphicon glyphicon-info-sign"></i> Hakkımızda
+                    </a><br />
+                    <a href="@Url.Action("MostLiked","Home")">
+                        <i class="glyphicon glyphicon-star"></i> En Beğenilenler
+                    </a><br />
+                    <a href="@Url.Action("Index","Home")">
+                        <i class="glyphicon glyphicon-th-list"></i> Son Yazılar
+                    </a>
+                </p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <h5><strong>MyEvernote</strong></h5>
+                <hr />
+                <p>Tüm hakları saklıdır. &copy; MyEvernote <br /> @DateTime.Now.Year</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <h5><strong>E-Bülten Üyeliği</strong></h5>
+                <hr />
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="e-posta adresiniz" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Gönder</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
