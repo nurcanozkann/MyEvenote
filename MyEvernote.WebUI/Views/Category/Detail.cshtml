@@ -1,6 +1,6 @@
 ﻿@model MyEvernote.Entities.Category
 @{
-    ViewBag.Title = "Kategori Detay";
+    ViewBag.Title = "Kategori Detay Sayfası";
 }
 
 <div class="row">
@@ -60,11 +60,7 @@
         </table>
     </div>
     <div class="col-md-8 col-md-offset-2">
-        <a href="/Category/Edit/@Model.Id" class="btn btn-warning btn-sm" title="Edit">
-            <span class="glyphicon glyphicon-edit"></span> Düzenle
-        </a>
-        <a href="/Category/Index" class="btn btn-default btn-sm" title="Edit">
-            <span class="glyphicon glyphicon-arrow-left"></span> Listeye Dön
-        </a>
+        @Bootstrap.LinkButton("/Category/Edit/" + Model.Id, "warning", "btn-sm", "Edit", "edit", " Düzenle")
+        @Bootstrap.LinkButton("/Category/Index", "default", "btn-sm", "Edit", "arrow-left", " Listeye Dön")
     </div>
 </div>

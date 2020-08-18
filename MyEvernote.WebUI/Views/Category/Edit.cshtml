@@ -1,7 +1,7 @@
 ﻿@model MyEvernote.Entities.Category
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Kategori Düzenleme Sayfası";
 }
 
 <div class="row">
@@ -36,13 +36,8 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-success">
-                            <span class="glyphicon glyphicon-floppy-saved"></span> Kaydet
-                        </button>
-
-                        <a href="/Category/Index" class="btn btn-default btn-sm" title="Edit">
-                            <span class="glyphicon glyphicon-arrow-left"></span> Listeye Dön
-                        </a>
+                        @Bootstrap.Button("submit", "success", string.Empty, "floppy-saved", " Kaydet")
+                        @Bootstrap.LinkButton("/Category/Index", "default", "btn-sm", "Edit", "arrow-left", " Listeye Dön")
                     </div>
                 </div>
             </div>

@@ -3,6 +3,8 @@ using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Entities;
 using MyEvernote.Entities.Messages;
 using MyEvernote.Entities.ViewModel;
+using MyEvernote.WebUI.Filters;
+using MyEvernote.WebUI.Models;
 using MyEvernote.WebUI.ViewModel;
 using System;
 using System.Linq;
@@ -12,6 +14,7 @@ using System.Web.Mvc;
 
 namespace MyEvernote.WebUI.Controllers
 {
+    [Exc]
     public class HomeController : Controller
     {
         private EvernoteUserManager evernoteUserManager = new EvernoteUserManager();
@@ -27,7 +30,8 @@ namespace MyEvernote.WebUI.Controllers
             //test.DeleteTest();
             //test.CommentTest();
 
-            return View(noteManager.List().OrderByDescending(x => x.UpdatedDate).ToList());
+            return View(noteManager.ListQueryable().Where(x=>x.IsDraft == false)
+                .OrderByDescending(x => x.UpdatedDate).ToList());
         }
 
         public ActionResult ByCategory(int? id)
@@ -44,7 +48,7 @@ namespace MyEvernote.WebUI.Controllers
                 return HttpNotFound();
             }
 
-            return View("Index", cat.Notes.OrderByDescending(x => x.UpdatedDate).ToList());
+            return View("Index", cat.Notes.Where(x => x.IsDraft == false).OrderByDescending(x => x.UpdatedDate).ToList());
         }
 
         public ActionResult MostLiked()
@@ -80,16 +84,16 @@ namespace MyEvernote.WebUI.Controllers
                     return View(request);
                 }
 
-                Session["login"] = res.Result;
+                CurrentSession.Set<EvernoteUser>("login", res.Result); //session'a kullanıcı bilgi saklama
                 return RedirectToAction("Index");
             }
             return View();
         }
 
+        [Auth]
         public ActionResult ShowProfile()
         {
-            EvernoteUser currentUser = Session["login"] as EvernoteUser;
-            BusinessLayerResult<EvernoteUser> res = evernoteUserManager.GetUserById(currentUser.Id);
+            BusinessLayerResult<EvernoteUser> res = evernoteUserManager.GetUserById(CurrentSession.User.Id);
 
             if (res.Errors.Count() > 0)
             {
@@ -103,10 +107,10 @@ namespace MyEvernote.WebUI.Controllers
             return View(res.Result);
         }
 
+        [Auth]
         public ActionResult EditProfile()
         {
-            EvernoteUser user = Session["login"] as EvernoteUser;
-            BusinessLayerResult<EvernoteUser> res = evernoteUserManager.GetUserById(user.Id);
+            BusinessLayerResult<EvernoteUser> res = evernoteUserManager.GetUserById(CurrentSession.User.Id);
 
             if (res.Errors.Count > 0)
             {
@@ -120,6 +124,7 @@ namespace MyEvernote.WebUI.Controllers
             return View(res.Result);
         }
 
+        [Auth]
         [HttpPost]
         public ActionResult EditProfile(EvernoteUser model, HttpPostedFileBase ProfileImage)
         {
@@ -153,18 +158,17 @@ namespace MyEvernote.WebUI.Controllers
                 }
 
                 // Profil güncellendiği için session güncellendi.
-                Session["login"] = res.Result;
-                //CurrentSession.Set<EvernoteUser>("login", res.Result);
+                CurrentSession.Set<EvernoteUser>("login", res.Result);
 
                 return RedirectToAction("ShowProfile");
             }
             return View(model);
         }
 
+        [Auth]
         public ActionResult DeleteProfile()
         {
-            EvernoteUser currentUser = Session["login"] as EvernoteUser;
-            BusinessLayerResult<EvernoteUser> res = evernoteUserManager.RemoveUserById(currentUser.Id);
+            BusinessLayerResult<EvernoteUser> res = evernoteUserManager.RemoveUserById(CurrentSession.User.Id);
 
             if (res.Errors.Count > 0)
             {
@@ -245,6 +249,16 @@ namespace MyEvernote.WebUI.Controllers
             Session.Clear();
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        public ActionResult HasError()
+        {
+            return View();
         }
     }
 }

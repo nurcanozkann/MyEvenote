@@ -1,0 +1,103 @@
+﻿@model MyEvernote.Entities.Note
+
+@{
+    ViewBag.Title = "Not Detay Sayfası";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h2>@ViewBag.Title</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table">
+            <tr>
+                <th class="col-md-3">
+                    @Html.DisplayNameFor(model => model.Category.Title)
+                </th>
+
+                <td class="col-md-9">
+                    @Html.DisplayFor(model => model.Category.Title)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Title)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Text)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Text)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsDraft)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.IsDraft)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.LikeCount)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.LikeCount)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.LikeCount)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.LikeCount)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedDate)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.CreatedDate)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdatedDate)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.UpdatedDate)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreatedUserName)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.CreatedUserName)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-8 col-md-offset-2">
+        @Bootstrap.LinkButton("/Note/Edit/" + Model.Id, "warning", "btn-sm", "Edit", "edit", " Düzenle")
+        @Bootstrap.LinkButton("/Note/Index", "default", "btn-sm", "Edit", "arrow-left", " Listeye Dön")
+    </div>
+</div>

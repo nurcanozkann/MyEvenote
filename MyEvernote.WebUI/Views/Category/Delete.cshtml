@@ -1,7 +1,7 @@
 ﻿@model MyEvernote.Entities.Category
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Kategori Silme Sayfası";
 }
 
 <div class="row">
@@ -66,13 +66,8 @@
             @Html.AntiForgeryToken()
 
             <div class="form-actions no-color">
-                <button type="submit" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span> Sil
-                </button>
-
-                <a href="/Category/Index" class="btn btn-default btn-sm" title="Edit">
-                    <span class="glyphicon glyphicon-arrow-left"></span> Listeye Dön
-                </a>
+                @Bootstrap.Button("submit", "danger", string.Empty, "remove", " Sil")
+                @Bootstrap.LinkButton("/Category/Index", "default", "btn-sm", "Edit", "arrow-left", " Listeye Dön")
             </div>
         }
     </div>

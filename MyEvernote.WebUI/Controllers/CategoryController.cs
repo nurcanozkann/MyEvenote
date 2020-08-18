@@ -1,10 +1,15 @@
 ﻿using MyEvernote.BusinessLayer;
 using MyEvernote.Entities;
+using MyEvernote.WebUI.Filters;
+using MyEvernote.WebUI.Models;
 using System.Net;
 using System.Web.Mvc;
 
 namespace MyEvernote.WebUI.Controllers
 {
+    [Auth]
+    [AuthAdmin]
+    [Exc]
     public class CategoryController : Controller
     {
         private CategoryManager cm = new CategoryManager();
@@ -40,7 +45,7 @@ namespace MyEvernote.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 cm.Insert(category);
-
+                CacheHelper.RemoveCategoriesFromCache();
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -73,6 +78,7 @@ namespace MyEvernote.WebUI.Controllers
                 categoreis.Description = category.Description;
 
                 cm.Update(categoreis);
+                CacheHelper.RemoveCategoriesFromCache();
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -100,7 +106,10 @@ namespace MyEvernote.WebUI.Controllers
         {
             Category category = cm.Find(x => x.Id == id);
             cm.Delete(category);
+            CacheHelper.RemoveCategoriesFromCache();
             return RedirectToAction("Index");
         }
+
+        
     }
 }

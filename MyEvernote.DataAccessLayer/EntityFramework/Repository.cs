@@ -23,9 +23,14 @@ namespace MyEvernote.DataAccessLayer.EntityFramework
             return _objectSet.ToList();
         }
 
-        public IQueryable<T> List(Expression<Func<T, bool>> value)
+        public IQueryable<T> ListQueryable()
         {
-            return _objectSet.Where(value);
+            return _objectSet.AsQueryable<T>();
+        }
+
+        public List<T> List(Expression<Func<T, bool>> where)
+        {
+            return _objectSet.Where(where).ToList();
         }
 
         public int Insert(T obj)

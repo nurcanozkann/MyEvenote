@@ -42,7 +42,7 @@
             <div class="row">
                 @foreach (var note in Model)
                 {
-                    <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="col-sm-4 col-lg-4 col-md-4" data-note-id="@note.Id">
                         <div class="thumbnail">
                             <img src="http://placehold.it/320x150" alt="">
                             <div class="caption">
@@ -58,7 +58,7 @@
                                 {
                                     <p>
                                         @note.Text.Substring(0, 40)
-                                        <a href="" class="btn btn-default btn-xs">devamı <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                        <a href="" data-toggle="modal" data-target="#modal_notedetail" data-note-id="@note.Id" class="btn btn-default btn-xs">devamı <span class="glyphicon glyphicon-chevron-right"></span></a>
                                     </p>
                                 }
                                 else
@@ -71,13 +71,14 @@
                             </div>
                             <div class="ratings">
                                 <p class="pull-right">
-                                    <button class="btn btn-default btn-sm">
+                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_comment" data-note-id="@note.Id">
                                         <span class="glyphicon glyphicon-comment"></span> Yorumlar
                                     </button>
                                 </p>
                                 <p>
-                                    <button class="btn btn-default btn-sm" type="button">
-                                        <span class="glyphicon glyphicon-star-empty"></span> @note.LikeCount
+                                    <button class="btn btn-default btn-sm" type="button" data-liked="false" data-note-id="@note.Id">
+                                        <span class="glyphicon glyphicon-star-empty like-star"></span>
+                                        <span class="like-count">@note.LikeCount</span>
                                     </button>
                                 </p>
                             </div>
@@ -92,3 +93,96 @@
 @section footer{
     @Html.Partial("_PartialFooter");
 }
+
+@Bootstrap.ModalPopup(id: "modal_comment", title: "Yorumlar")
+@Bootstrap.ModalPopup(id: "modal_notedetail", title: "Not Detayı")
+
+
+<script src="~/Scripts/Comment.js"></script>
+@*<script src="~/Scripts/Like.js"></script>*@
+<script src="~/Scripts/NoteDetail.js"></script>
+
+
+<script>
+
+    $(function () {
+
+        var noteids = [];
+
+        $("div[data-note-id]").each(function (i, e) {
+            noteids.push($(e).data("note-id"));
+        });
+
+        $.ajax({
+            method: "POST",
+            url: "/Note/GetLiked",
+            data: { ids: noteids }
+        }).done(function (data) {
+
+            if (data.result != null && data.result.length > 0) {
+                for (var i = 0; i < data.result.length; i++) {
+                    var id = data.result[i];
+                    var likedNote = $("div[data-note-id=" + id + "]");
+                    var btn = likedNote.find("button[data-liked]");
+                    var span = btn.find("span.like-star");
+
+                    btn.data("liked", true);
+                    span.removeClass("glyphicon-star-empty");
+                    span.addClass("glyphicon-star");
+                }
+
+            }
+
+        }).fail(function () {
+
+        });
+
+
+
+        $("button[data-liked]").click(function () {
+            var btn = $(this);
+            var liked = btn.data("liked");
+            var noteid = btn.data("note-id");
+            var spanStar = btn.find("span.like-star");
+            var spanCount = btn.find("span.like-count");
+
+            console.log(liked);
+            console.log("like count : " + spanCount.text());
+
+            $.ajax({
+                method: "POST",
+                url: "/Note/SetLikeState",
+                data: { "noteid": noteid, "liked": !liked }
+            }).done(function (data) {
+
+                console.log(data);
+
+                if (data.hasError) {
+                    alert(data.errorMessage);
+                } else {
+                    liked = !liked;
+                    btn.data("liked", liked);
+                    spanCount.text(data.result);
+
+                    console.log("like count(after) : " + spanCount.text());
+
+
+                    spanStar.removeClass("glyphicon-star-empty");
+                    spanStar.removeClass("glyphicon-star");
+
+                    if (liked) {
+                        spanStar.addClass("glyphicon-star");
+                    } else {
+                        spanStar.addClass("glyphicon-star-empty");
+                    }
+
+                }
+
+            }).fail(function () {
+                alert("Sunucu ile bağlantı kurulamadı.");
+            })
+
+        });
+    });
+
+</script>

@@ -1,7 +1,8 @@
-﻿@model MyEvernote.Entities.Category
+﻿@using MyEvernote.WebUI
+@model MyEvernote.Entities.Category
 
 @{
-    ViewBag.Title = "Kategori Ekle";
+    ViewBag.Title = "Kategori Ekleme Sayfası";
 }
 
 <link href="~/Style/css/validation-summary.css" rel="stylesheet" />
@@ -20,7 +21,7 @@
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
-               
+
                 @Html.ValidationSummary(false)
                 <div class="form-group">
                     @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -38,13 +39,8 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-success btn-sm">
-                            <span class="glyphicon glyphicon-plus"></span> Ekle
-                        </button>
-
-                        <a href="/Category/Index" class="btn btn-default btn-sm" title="Edit">
-                            <span class="glyphicon glyphicon-arrow-left"></span> Listeye Dön
-                        </a>
+                        @Bootstrap.Button("submit", "success", "btn-sm", "plus", " Ekle")
+                        @Bootstrap.LinkButton("/Category/Index", "default", "btn-sm", "Edit", "arrow-left", " Listeye Dön")
                     </div>
                 </div>
             </div>

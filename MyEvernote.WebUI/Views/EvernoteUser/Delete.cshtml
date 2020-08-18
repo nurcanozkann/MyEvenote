@@ -1,0 +1,97 @@
+﻿@model MyEvernote.Entities.EvernoteUser
+
+@{
+    ViewBag.Title = "Kullanıcı Sil";
+}
+
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h2>Kullanıcı Silme Sayfası</h2>
+        <h3>Bunu silmek istediğinize emin misiniz?</h3>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Name)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Surname)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Surname)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Username)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Email)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.Password)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.IsActive)
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAdmin)
+                </th>
+
+                <td>
+                    @Html.DisplayFor(model => model.IsAdmin)
+                </td>
+            </tr>
+        </table>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                @Bootstrap.Button("submit", "danger", string.Empty, "remove", " Sil")
+                @Bootstrap.LinkButton("/EvernoteUser/Index", "default", "btn-sm", "Edit", "arrow-left", " Listeye Dön")
+            </div>
+        }
+    </div>
+</div>
+
+
+
+

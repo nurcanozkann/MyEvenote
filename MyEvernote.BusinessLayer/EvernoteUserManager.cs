@@ -1,7 +1,6 @@
 ﻿using MyEvernote.BusinessLayer.Abstract;
 using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Common.Helpers;
-using MyEvernote.DataAccessLayer.EntityFramework;
 using MyEvernote.Entities;
 using MyEvernote.Entities.Messages;
 using MyEvernote.Entities.ViewModel;
@@ -35,7 +34,7 @@ namespace MyEvernote.BusinessLayer
             }
             else
             {
-                int dbResult = Insert(new EvernoteUser()
+                int dbResult = base.Insert(new EvernoteUser()
                 {
                     Email = data.Email,
                     Username = data.Username,
@@ -123,7 +122,7 @@ namespace MyEvernote.BusinessLayer
 
         public BusinessLayerResult<EvernoteUser> UpdateProfile(EvernoteUser data)
         {
-            EvernoteUser db_user = Find(x => x.Username == data.Username && x.Email == data.Email);
+            EvernoteUser db_user = Find(x => x.Username == data.Username || x.Email == data.Email);
             BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
             if (db_user != null && db_user.Id != data.Id)
             {
@@ -150,7 +149,7 @@ namespace MyEvernote.BusinessLayer
             {
                 res.Result.ProfileImageFileName = data.ProfileImageFileName;
             }
-            if (Update(res.Result) == 0)
+            if (base.Update(res.Result) == 0)
             {
                 res.AddError(ErrorMessageCode.ProfileCouldNotUpdated, "Profile Güncellenemedi.");
             }
@@ -173,6 +172,78 @@ namespace MyEvernote.BusinessLayer
                 res.AddError(ErrorMessageCode.UserCouldNotFind, "Kullanıcı bulunamadı");
             }
 
+            return res;
+        }
+
+        //override işimize yaaramaz çünkü geri dönüş tipini deiğştiremiyoruz. Metod hiding yani new anahtar kelimesini kullanacağız.
+        // Metod hiding
+        public new BusinessLayerResult<EvernoteUser> Insert(EvernoteUser data)
+        {
+            EvernoteUser user = Find(x => x.Username == data.Username || x.Email == data.Email);
+            BusinessLayerResult<EvernoteUser> layer_result = new BusinessLayerResult<EvernoteUser>();
+            layer_result.Result = data;
+
+            if (user != null)
+            {
+                if (user.Username == data.Username)
+                {
+                    layer_result.AddError(ErrorMessageCode.UsernameAlreadyExists, "Kullanıcı adı kayıtlı");
+                }
+
+                if (user.Email == data.Email)
+                {
+                    layer_result.AddError(ErrorMessageCode.EmailAlreadyExists, "Kullanıcı e-posta kayıtlı");
+                }
+            }
+            else
+            {
+                layer_result.Result.ProfileImageFileName = "user_boy.png";
+                layer_result.Result.ActivateGuid = Guid.NewGuid();
+
+                //Manager base'den gelen  insert işlemini kullanıyoruz.
+                if(base.Insert(layer_result.Result) == 0)
+                {
+                    layer_result.AddError(ErrorMessageCode.UserCouldNotInserted,"Kullanıcı Eklenemedi.");
+                }
+            }
+
+            return layer_result;
+        }
+
+        // Metod hiding - new key word
+        public new BusinessLayerResult<EvernoteUser> Update(EvernoteUser data)
+        {
+            EvernoteUser db_user = Find(x => x.Username == data.Username || x.Email == data.Email);
+            BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
+            res.Result = data;
+
+            if (db_user != null && db_user.Id != data.Id)
+            {
+                if (db_user.Username == data.Username)
+                {
+                    res.AddError(ErrorMessageCode.UsernameAlreadyExists, "Kullanıcı adı kayıtlı.");
+                }
+                if (db_user.Email == data.Email)
+                {
+                    res.AddError(ErrorMessageCode.EmailAlreadyExists, "E-posta adresi kayıtlı.");
+                }
+
+                return res;
+            }
+
+            res.Result = Find(x => x.Id == data.Id);
+            res.Result.Email = data.Email;
+            res.Result.Name = data.Name;
+            res.Result.Surname = data.Surname;
+            res.Result.Password = data.Password;
+            res.Result.Username = data.Username;
+            res.Result.IsActive = data.IsActive;
+            res.Result.IsAdmin = data.IsAdmin;
+            
+            if (base.Update(res.Result) == 0)
+            {
+                res.AddError(ErrorMessageCode.UserCouldNotUpdated, "Kullanıcı Güncellenemedi.");
+            }
             return res;
         }
     }
